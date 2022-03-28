@@ -1,0 +1,30 @@
+{
+  "name": "front-project",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.1.1",
+    "@fortawesome/free-solid-svg-icons": "^6.1.1",
+    "@fortawesome/vue-fontawesome": "^3.0.0-5",
+    "@popperjs/core": "^2.11.4",
+    "axios": "^0.26.1",
+    "bootstrap": "^5.1.3",
+    "core-js": "^3.8.3",
+    "jquery": "^3.6.0",
+    "moment": "^2.29.1",
+    "mysql": "github:mysqljs/mysql",
+    "typescript": "^4.6.3",
+    "vue": "^3.2.13",
+    "vue-axios": "^3.4.1",
+    "vue-router": "^4.0.3"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~5.0.0",
+    "@vue/cli-plugin-router": "~5.0.0",
+    "@vue/cli-service": "~5.0.0"
+  }
+}
