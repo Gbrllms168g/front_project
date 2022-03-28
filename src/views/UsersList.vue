@@ -2,6 +2,9 @@
 
 <NavBar msg="Usuarios activos"/>
 
+  <p v-if="paginated_info.length === 0" class="text-center">
+  <div class="d-inline p-2 bg-danger text-white text-center">Actualmente no hay usuarios Activos</div>
+  </p>
 
   <div style="background-color: rgba(195, 191, 191, 0.4) " class="container mt-5">
 
@@ -46,18 +49,20 @@ axios.defaults.baseURL = process.env.VUE_APP_SERVICE_SERVER
 export default {
   name: "UsersList",
   components: {Pagination, NavBar},
+  // Se exporta la informacion de los usuarios por pagina, cuantos elementos por pagina
+  //y banderas para el control de componentes
   data() {
     return {
       activeUserList: [],
       page_elements: 4,
       paginated_info: [],
-      isMounted: false,
+      isMounted: false, //El componente hijo espera a que el componente padre este cargado para asi inicializarse
       selectedUser: null
     }
   },
   methods: {
+    //Obtiene la lista de usuarios activos
     async getList(){
-
       await axios.get(`/`)
       .then(response => {
         this.activeUserList = response.data.data.active[0]
@@ -66,9 +71,11 @@ export default {
       .catch((error) => console.log(error))
 
     },
+    //Obtiene el total de paginas en base a la lista de usuarios activos
     total_pages(){
       return Math.ceil(this.activeUserList.length / this.page_elements)
     },
+    //Va obteniendo el indice de paginas
     get_index_pages(e){
       let start = e[0]
       let end = e[1]
@@ -78,11 +85,13 @@ export default {
         this.paginated_info.push(this.activeUserList[i])
       }
     },
+    //Cambiar de ruta al hacer click sobre alguna fila
     selectRow(user){
       this.selectedUser = user;
       this.$router.push(`/user/${this.selectedUser}`)
     }
   },
+  //al cargar el componente se ejecuta la funcion para obtener la lista
   created() {
     this.getList()
   }

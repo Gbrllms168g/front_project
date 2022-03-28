@@ -206,6 +206,7 @@ export default {
     }
   },
   methods: {
+    //Valida el formulario
     checkForm(name, a_p, a_m, rfc, curp) {
       this.errors = []
       if (!name){
@@ -234,20 +235,18 @@ export default {
       } else {
         if (rfc.length > 20) {
           this.errors.push("El rfc debe ser menor a 20 caracteres")
+        } else if (!this.validate_rfc(rfc)){
+          this.errors.push("El rfc debe ser coincidir con alguno de los siguientes formatos: \"XXXX000000X00 XXXX00000\"")
         }
-        // else if (!this.validate_rfc(rfc)){
-        //   this.errors.push("El rfc debe ser coincidir con alguno de los siguientes formatos: \"XXXX000000X00 XXXX00000\"")
-        // }
       }
       if (!curp){
         this.errors.push("El curp es requerido")
       } else {
         if (curp.length > 20) {
           this.errors.push("El curp debe ser menor a 20 caracteres")
+        } else if (!this.validate_curp(curp)){
+          this.errors.push("El curp debe ser coincidir con el siguiente formatos: \"XXXX000000XXXXXX00\"")
         }
-        // else if (!this.validate_curp(curp)){
-        //   this.errors.push("El curp debe ser coincidir con el siguiente formatos: \"XXXX000000XXXXXX00\"")
-        // }
       }
     },
     validate_rfc(rfc){
@@ -258,6 +257,7 @@ export default {
       const curp_format = /^([A-Z][AEIOUX][A-Z]{2}\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])[HM](?:AS|B[CS]|C[CLMSH]|D[FG]|G[TR]|HG|JC|M[CNS]|N[ETL]|OC|PL|Q[TR]|S[PLR]|T[CSL]|VZ|YN|ZS)[B-DF-HJ-NP-TV-Z]{3}[A-Z\d])(\d)$/
       return curp_format.test(curp)
     },
+    //Solicita la informacion del usuario seleccionado
     async getresultInfo() {
       await axios.get(`/user/${this.$route.params.id}`)
           .then(response => {
@@ -268,6 +268,7 @@ export default {
           })
           .catch((error) => console.log(error))
     },
+    //formatea datetime solo a fecha
     format_date() {
       this.formated_data = this.resultInfo.map(data => {
         data.fecha_alta = moment(data.fecha_contratacion).format('LL')
@@ -276,12 +277,13 @@ export default {
         return data
       })
     },
+    //muestra las cards de informacion sobre cuentas
     select_option() {
       this.show_cards = true
     },
+    //realiza la peticion para la actualizacion del usuario
     async update_submit_form(e) {
       const formData = new FormData(e.target)
-
       const payload = {
         id: this.$route.params.id,
         name: formData.get('name'),
@@ -291,7 +293,7 @@ export default {
         curp: formData.get('curp')
       }
       this.checkForm(payload.name, payload.ap, payload.am, payload.rfc, payload.curp)
-      console.log(this.errors.length)
+      //si no hay errores despues de checar el formulario realiza la peticion
       if (this.errors.length === 0) {
         const responsePromise = axios.patch(`/user/${this.$route.params.id}`, payload)
         const response = await responsePromise
@@ -313,6 +315,7 @@ export default {
       }
 
     },
+    //realiza la peticion para borrar el usuario
     async delete_user() {
       const responsePromise = axios.delete(`/user/${this.$route.params.id}`, payload)
       const response = await responsePromise
